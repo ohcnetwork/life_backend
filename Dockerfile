@@ -14,4 +14,4 @@ USER django
 
 WORKDIR /app
 
-EXPOSE 9000
+EXPOSE 8000
