@@ -9,7 +9,6 @@ executors:
     machine:
       image: ubuntu-2004:202101-01
       docker_layer_caching: true
-    resource_class: arm.large
 jobs:
   Test-Build:
     docker:
