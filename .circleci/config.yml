@@ -7,9 +7,9 @@ orbs:
 executors:
   main-executor:
     machine:
-      image: "ubuntu-1604:201903-01"
+      image: ubuntu-2004:202101-01
       docker_layer_caching: true
-    resource_class: large
+    resource_class: arm.large
 jobs:
   Test-Build:
     docker:
