@@ -26,9 +26,7 @@ class SignupView(View):
             form = self.form_class()
             if kwargs["type"] != User.TYPE_VALUE_MAP["Volunteer"]:
                 form.fields["skill"].widget = forms.HiddenInput()
-            return render(
-                request, self.template, {"form": form, "type": kwargs["name"]}
-            )
+            return render(request, self.template, {"form": form, "type": kwargs["name"]})
         except Exception as e:
             print(e)
             logging.error(e)
@@ -38,9 +36,6 @@ class SignupView(View):
         form = CustomSignupForm(request.POST)
         if form.is_valid():
             user_obj = form.save(commit=False)
-            user_obj.user_type = kwargs["type"]
-            if user_obj.user_type == 30:
-                return HttpResponseRedirect("/500")
             user_obj.save()
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password1")

@@ -12,7 +12,6 @@ User = get_user_model()
 
 
 class SignUpSerializer(serializers.ModelSerializer):
-    user_type = ChoiceField(choices=User.TYPE_CHOICES)
     gender = ChoiceField(choices=GENDER_CHOICES)
     password = serializers.CharField(write_only=True)
     phone_number = PhoneNumberIsPossibleField()
@@ -26,7 +25,6 @@ class SignUpSerializer(serializers.ModelSerializer):
             "last_name",
             "email",
             "password",
-            "user_type",
             "ward",
             "local_body",
             "district",
@@ -64,7 +62,6 @@ class UserCreateSerializer(SignUpSerializer):
 
 
 class UserSerializer(SignUpSerializer):
-    user_type = ChoiceField(choices=User.TYPE_CHOICES, read_only=True)
     is_superuser = serializers.BooleanField(read_only=True)
 
     local_body_object = LocalBodySerializer(source="local_body", read_only=True)
@@ -79,7 +76,6 @@ class UserSerializer(SignUpSerializer):
             "first_name",
             "last_name",
             "email",
-            "user_type",
             "local_body",
             "district",
             "state",
@@ -92,14 +88,12 @@ class UserSerializer(SignUpSerializer):
             "district_object",
             "state_object",
         )
-        read_only_fields = ("is_superuser", "verified", "user_type", "ward", "local_body", "district", "state")
+        read_only_fields = ("is_superuser", "verified", "ward", "local_body", "district", "state")
 
     extra_kwargs = {"url": {"lookup_field": "username"}}
 
 
 class UserBaseMinimumSerializer(serializers.ModelSerializer):
-    user_type = ChoiceField(choices=User.TYPE_CHOICES, read_only=True)
-
     class Meta:
         model = User
         fields = (
@@ -108,7 +102,6 @@ class UserBaseMinimumSerializer(serializers.ModelSerializer):
             "username",
             "email",
             "last_name",
-            "user_type",
             "last_login",
         )
 
@@ -117,7 +110,6 @@ class UserListSerializer(serializers.ModelSerializer):
     local_body_object = LocalBodySerializer(source="local_body", read_only=True)
     district_object = DistrictSerializer(source="district", read_only=True)
     state_object = StateSerializer(source="state", read_only=True)
-    user_type = ChoiceField(choices=User.TYPE_CHOICES, read_only=True)
 
     class Meta:
         model = User
@@ -129,7 +121,6 @@ class UserListSerializer(serializers.ModelSerializer):
             "local_body_object",
             "district_object",
             "state_object",
-            "user_type",
             "last_login",
         )
 

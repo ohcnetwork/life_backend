@@ -15,20 +15,11 @@ from life.users.api.serializers.user import UserCreateSerializer, UserListSerial
 User = get_user_model()
 
 
-def remove_facility_user_cache(user_id):
-    key = "user_facilities:" + str(user_id)
-    cache.delete(key)
-    return True
-
-
 def inverse_choices(choices):
     output = {}
     for choice in choices:
         output[choice[1]] = choice[0]
     return output
-
-
-INVERSE_USER_TYPE = inverse_choices(User.TYPE_CHOICES)
 
 
 class UserFilterSet(filters.FilterSet):
@@ -38,16 +29,6 @@ class UserFilterSet(filters.FilterSet):
     phone_number = filters.CharFilter(field_name="phone_number", lookup_expr="icontains")
     last_login = filters.DateFromToRangeFilter(field_name="last_login")
     district_id = filters.NumberFilter(field_name="district_id", lookup_expr="exact")
-
-    def get_user_type(
-        self, queryset, field_name, value,
-    ):
-        if value:
-            if value in INVERSE_USER_TYPE:
-                return queryset.filter(user_type=INVERSE_USER_TYPE[value])
-        return queryset
-
-    user_type = filters.CharFilter(method="get_user_type", field_name="user_type")
 
 
 class UserViewSet(
@@ -70,29 +51,12 @@ class UserViewSet(
     )
     filterset_class = UserFilterSet
     ordering_fields = ["id", "date_joined", "last_login"]
-    # last_login
-    # def get_permissions(self):
-    #     return [
-    #         DRYPermissions(),
-    #         IsAuthenticated(),
-    #     ]
-    # if self.request.method == "POST":
-    #     return [
-    #         DRYPermissions(),
-    #     ]
-    # else:
-    #     return [
-    #         IsAuthenticated(),
-    #         DRYPermissions(),
-    #     ]
 
     def get_serializer_class(self):
         if self.action == "list" and not self.request.user.is_superuser:
             return UserListSerializer
         elif self.action == "add_user":
             return UserCreateSerializer
-        # elif self.action == "create":
-        #     return SignUpSerializer
         else:
             return UserSerializer
 
