@@ -130,7 +130,6 @@ class User(AbstractUser):
     pf_auth = models.TextField(default=None, null=True)
 
     REQUIRED_FIELDS = [
-        "user_type",
         "email",
         "phone_number",
         "age",
