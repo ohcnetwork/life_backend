@@ -134,6 +134,5 @@ class User(AbstractUser):
         "phone_number",
         "age",
         "gender",
-        "district",
     ]
 
