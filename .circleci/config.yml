@@ -58,24 +58,24 @@ workflows:
           name: deploy-to-staging
           cluster-name: "${EKS_CLUSTER_NAME}"
           aws-region: "${AWS_DEFAULT_REGION}"
-          container-image-updates: "${EKS_CONTAINER_NAME}=${AWS_ECR_ACCOUNT_URL}/${AWS_RESOURCE_NAME_PREFIX}:${CIRCLE_SHA1}"
-          resource-name: "${EKS_STAGING_DEPLOYMENT_NAME}"
+          container-image-updates: "life=${AWS_ECR_ACCOUNT_URL}/${AWS_RESOURCE_NAME_PREFIX}:${CIRCLE_SHA1}"
+          resource-name: "deployment/life-django-staging"
           requires:
             - aws-ecr/build-and-push-image
       - aws-eks/update-container-image:
           name: update-scheduler-staging
           cluster-name: "${EKS_CLUSTER_NAME}"
           aws-region: "${AWS_DEFAULT_REGION}"
-          container-image-updates: "${EKS_CONTAINER_NAME}=${AWS_ECR_ACCOUNT_URL}/${AWS_RESOURCE_NAME_PREFIX}:${CIRCLE_SHA1}"
-          resource-name: "${EKS_STAGING_SCHEDULER_NAME}"
+          container-image-updates: "life=${AWS_ECR_ACCOUNT_URL}/${AWS_RESOURCE_NAME_PREFIX}:${CIRCLE_SHA1}"
+          resource-name: "deployment/life-staging-celery-beat"
           requires:
             - aws-ecr/build-and-push-image
       - aws-eks/update-container-image:
           name: update-worker-staging
           cluster-name: "${EKS_CLUSTER_NAME}"
           aws-region: "${AWS_DEFAULT_REGION}"
-          container-image-updates: "${EKS_CONTAINER_NAME}=${AWS_ECR_ACCOUNT_URL}/${AWS_RESOURCE_NAME_PREFIX}:${CIRCLE_SHA1}"
-          resource-name: "${EKS_STAGING_WORKER_NAME}"
+          container-image-updates: life=${AWS_ECR_ACCOUNT_URL}/${AWS_RESOURCE_NAME_PREFIX}:${CIRCLE_SHA1}"
+          resource-name: "deployment/life-staging-celery-worker"
           requires:
             - aws-ecr/build-and-push-image
   deploy-to-production:
@@ -91,25 +91,25 @@ workflows:
             branches:
               only: production
       - aws-eks/update-container-image:
-          cluster-name: "${EKS_CLUSTER_NAME}"
+          cluster-name: "care"
           aws-region: "${AWS_DEFAULT_REGION}"
-          container-image-updates: "${EKS_CONTAINER_NAME}=${AWS_ECR_ACCOUNT_URL}/${AWS_RESOURCE_NAME_PREFIX}:${CIRCLE_SHA1}"
-          resource-name: "${EKS_PRODUCTION_DEPLOYMENT_NAME}"
+          container-image-updates: "life=${AWS_ECR_ACCOUNT_URL}/${AWS_RESOURCE_NAME_PREFIX}:${CIRCLE_SHA1}"
+          resource-name: "deployment/life-django-production"
           requires:
             - aws-ecr/build-and-push-image
       - aws-eks/update-container-image:
           name: update-scheduler-production
-          cluster-name: "${EKS_CLUSTER_NAME}"
+          cluster-name: "care"
           aws-region: "${AWS_DEFAULT_REGION}"
-          container-image-updates: "${EKS_CONTAINER_NAME}=${AWS_ECR_ACCOUNT_URL}/${AWS_RESOURCE_NAME_PREFIX}:${CIRCLE_SHA1}"
-          resource-name: "${EKS_PRODUCTION_SCHEDULER_NAME}"
+          container-image-updates: "life=${AWS_ECR_ACCOUNT_URL}/${AWS_RESOURCE_NAME_PREFIX}:${CIRCLE_SHA1}"
+          resource-name: "deployment/life-production-celery-beat"
           requires:
             - aws-ecr/build-and-push-image
       - aws-eks/update-container-image:
           name: update-worker
-          cluster-name: "${EKS_CLUSTER_NAME}"
+          cluster-name: "care"
           aws-region: "${AWS_DEFAULT_REGION}"
-          container-image-updates: "${EKS_CONTAINER_NAME}=${AWS_ECR_ACCOUNT_URL}/${AWS_RESOURCE_NAME_PREFIX}:${CIRCLE_SHA1}"
-          resource-name: "${EKS_PRODUCTION_WORKER_NAME}"
+          container-image-updates: "life=${AWS_ECR_ACCOUNT_URL}/${AWS_RESOURCE_NAME_PREFIX}:${CIRCLE_SHA1}"
+          resource-name: "deployment/life-production-celery-worker"
           requires:
             - aws-ecr/build-and-push-image
