@@ -118,9 +118,11 @@ class User(AbstractUser):
     district = models.ForeignKey(District, on_delete=models.PROTECT, null=True, blank=True)
     state = models.ForeignKey(State, on_delete=models.PROTECT, null=True, blank=True)
 
-    phone_number = models.CharField(max_length=14, validators=[phone_number_regex] , blank=True,null=True)
-    gender = models.IntegerField(choices=GENDER_CHOICES, blank=False , blank=True,null=True )
-    age = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(100)] , default=2 , blank=True , null=True)
+    phone_number = models.CharField(max_length=14, validators=[phone_number_regex], blank=True, null=True)
+    gender = models.IntegerField(choices=GENDER_CHOICES, blank=True, null=True)
+    age = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(100)], default=2, blank=True, null=True
+    )
     verified = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
 
@@ -135,5 +137,4 @@ class User(AbstractUser):
         "age",
         "gender",
     ]
-
 
