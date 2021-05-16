@@ -56,7 +56,7 @@ workflows:
               only: master
       - aws-eks/update-container-image:
           name: deploy-to-staging
-          cluster-name: "${EKS_CLUSTER_NAME}"
+          cluster-name: "care"
           aws-region: "${AWS_DEFAULT_REGION}"
           container-image-updates: "life=${AWS_ECR_ACCOUNT_URL}/${AWS_RESOURCE_NAME_PREFIX}:${CIRCLE_SHA1}"
           resource-name: "deployment/life-django-staging"
@@ -64,7 +64,7 @@ workflows:
             - aws-ecr/build-and-push-image
       - aws-eks/update-container-image:
           name: update-scheduler-staging
-          cluster-name: "${EKS_CLUSTER_NAME}"
+          cluster-name: "care"
           aws-region: "${AWS_DEFAULT_REGION}"
           container-image-updates: "life=${AWS_ECR_ACCOUNT_URL}/${AWS_RESOURCE_NAME_PREFIX}:${CIRCLE_SHA1}"
           resource-name: "deployment/life-staging-celery-beat"
@@ -72,9 +72,9 @@ workflows:
             - aws-ecr/build-and-push-image
       - aws-eks/update-container-image:
           name: update-worker-staging
-          cluster-name: "${EKS_CLUSTER_NAME}"
-          aws-region: "${AWS_DEFAULT_REGION}"
-          container-image-updates: life=${AWS_ECR_ACCOUNT_URL}/${AWS_RESOURCE_NAME_PREFIX}:${CIRCLE_SHA1}"
+          cluster-name: "carre"
+          aws-region: "ap-south-1"
+          container-image-updates: "life=${AWS_ECR_ACCOUNT_URL}/${AWS_RESOURCE_NAME_PREFIX}:${CIRCLE_SHA1}"
           resource-name: "deployment/life-staging-celery-worker"
           requires:
             - aws-ecr/build-and-push-image
