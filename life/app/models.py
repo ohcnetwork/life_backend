@@ -56,6 +56,8 @@ class LifeData(BaseModel):
     is_duplicate = models.BooleanField(default=False)
     downvotes = models.IntegerField(default=0)
     upvotes = models.IntegerField(default=0)
+    verifiedAndAvailable = models.IntegerField(default=0)
+    verifiedAndUnavailable = models.IntegerField(default=0)
 
 
 from life.app.tasks.job_executor import run_jobs, save_life_data  # Dont Delete
