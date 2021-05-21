@@ -78,6 +78,15 @@ workflows:
           resource-name: "deployment/life-staging-celery-worker"
           requires:
             - aws-ecr/build-and-push-image
+      - aws-eks/update-container-image:
+          name: update-sqs-poller-staging
+          cluster-name: "care"
+          aws-region: "ap-south-1"
+          container-image-updates: "life=${AWS_ECR_ACCOUNT_URL}/${AWS_RESOURCE_NAME_PREFIX}:${CIRCLE_SHA1}"
+          resource-name: "deployment/life-staging-sqs-poller"
+          requires:
+            - aws-ecr/build-and-push-image
+
   deploy-to-production:
     jobs:
       - aws-ecr/build-and-push-image:
@@ -91,6 +100,7 @@ workflows:
             branches:
               only: production
       - aws-eks/update-container-image:
+          name: update-deployment-production
           cluster-name: "care"
           aws-region: "${AWS_DEFAULT_REGION}"
           container-image-updates: "life=${AWS_ECR_ACCOUNT_URL}/${AWS_RESOURCE_NAME_PREFIX}:${CIRCLE_SHA1}"
@@ -106,10 +116,18 @@ workflows:
           requires:
             - aws-ecr/build-and-push-image
       - aws-eks/update-container-image:
-          name: update-worker
+          name: update-worker-production
           cluster-name: "care"
           aws-region: "${AWS_DEFAULT_REGION}"
           container-image-updates: "life=${AWS_ECR_ACCOUNT_URL}/${AWS_RESOURCE_NAME_PREFIX}:${CIRCLE_SHA1}"
           resource-name: "deployment/life-production-celery-worker"
+          requires:
+            - aws-ecr/build-and-push-image
+      - aws-eks/update-container-image:
+          name: update-sqs-poller-production
+          cluster-name: "care"
+          aws-region: "ap-south-1"
+          container-image-updates: "life=${AWS_ECR_ACCOUNT_URL}/${AWS_RESOURCE_NAME_PREFIX}:${CIRCLE_SHA1}"
+          resource-name: "deployment/life-production-sqs-poller"
           requires:
             - aws-ecr/build-and-push-image
