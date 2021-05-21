@@ -412,3 +412,8 @@ LIFE_S3_ACCESS_KEY = env("LIFE_S3_ACCESS_KEY", default="")
 LIFE_S3_SECRET = env("LIFE_S3_SECRET", default="")
 LIFE_S3_BUCKET = env("LIFE_S3_BUCKET", default="")
 
+SQS_AWS_REGION = env("SQS_AWS_REGION", default="")
+SQS_AWS_ACCESS_KEY_ID = env("SQS_AWS_ACCESS_KEY_ID", default="")
+SQS_AWS_SECRET_ACCESS_KEY = env("SQS_AWS_SECRET_ACCESS_KEY", default="")
+SQS_QUEUE_NAME = env("SQS_QUEUE_NAME", default="")
+

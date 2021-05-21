@@ -17,14 +17,14 @@ from life.app.models import LifeData
 from django.db.models import F
 
 client_args = {
-    "region_name": settings.AWS_REGION_STREAM_LOG,
-    "aws_access_key_id": settings.AWS_ACCESS_KEY_ID,
-    "aws_secret_access_key": settings.AWS_SECRET_ACCESS_KEY,
+    "region_name": settings.SQS_AWS_REGION,
+    "aws_access_key_id": settings.SQS_AWS_ACCESS_KEY_ID,
+    "aws_secret_access_key": settings.SQS_AWS_SECRET_ACCESS_KEY,
 }
 
 # Create SQS client
 sqs_client = boto3.client("sqs", **client_args)
-queue_URL = sqs_client.get_queue_url(QueueName=settings.SQS_STREAM_LOG_QUEUE_NAME,)["QueueUrl"]
+queue_URL = sqs_client.get_queue_url(QueueName=settings.SQS_QUEUE_NAME,)["QueueUrl"]
 
 CHOICES = {"0": "upvotes", "1": "downvotes", "2": "verifiedAndAvailable", "3": "verifiedAndUnavailable"}
 
