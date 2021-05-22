@@ -25,7 +25,7 @@ client_args = {
 # Create SQS client
 sqs_client = boto3.client("sqs", **client_args)
 queue_URL = sqs_client.get_queue_url(QueueName=settings.SQS_QUEUE_NAME,)["QueueUrl"]
-
+LOGGER.info(f"Starting SQS Poller for {queue_URL}")
 CHOICES = {"0": "upvotes", "1": "downvotes", "2": "verifiedAndAvailable", "3": "verifiedAndUnavailable"}
 
 
@@ -56,7 +56,6 @@ class SignalHandler:
 def recieve_sqs_message(sqs):
     return sqs.receive_message(
         QueueUrl=queue_URL,
-        AttributeNames=["SentTimestamp"],
         MessageAttributeNames=["All"],
         MaxNumberOfMessages=10,
         VisibilityTimeout=39600,  # 11 Hours
@@ -78,20 +77,16 @@ def sqs_check_new_log_messages():
                 receipt_handle = message["ReceiptHandle"]
                 run = False
                 try:
-                    try:
-                        external_id = message["MessageAttributes"]["ExternalID"]["StringValue"]
-                        feedback = message["MessageAttributes"]["Feedback"]["StringValue"]
-                        handle(external_id, feedback)
-                        LOGGER.info(f"Processed {feedback} for {external_id}")
-                    except Exception as e:
-                        LOGGER.error(
-                            f"Exception when handling message with external_id {external_id} for event {feedback}"
-                        )
-                    handle(message)
-                    run = True
+                    external_id = message["MessageAttributes"]["ExternalID"]["StringValue"]
+                    feedback = message["MessageAttributes"]["Feedback"]["StringValue"]
+                    handle(external_id, feedback)
+                    LOGGER.info(f"Processed {feedback} for {external_id}")
                 except Exception as e:
-                    # Faulty message in SQS
-                    LOGGER.warning(e)
+                    LOGGER.error(
+                        f"Exception when handling message with external_id {external_id} for event {feedback}"
+                    )
+                    run = True
+
                 if run:
                     sqs_client.delete_message(QueueUrl=queue_URL, ReceiptHandle=receipt_handle)
 
