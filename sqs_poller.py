@@ -7,8 +7,6 @@ import boto3
 import django
 from django.conf import settings
 
-LOGGER = logging.getLogger("Life SQS Worker")
-
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.local")
 
 django.setup()
@@ -25,7 +23,7 @@ client_args = {
 # Create SQS client
 sqs_client = boto3.client("sqs", **client_args)
 queue_URL = sqs_client.get_queue_url(QueueName=settings.SQS_QUEUE_NAME,)["QueueUrl"]
-LOGGER.info(f"Starting SQS Poller for {queue_URL}")
+logging.info(f"Starting SQS Poller for {queue_URL}")
 CHOICES = {"0": "upvotes", "1": "downvotes", "2": "verifiedAndAvailable", "3": "verifiedAndUnavailable"}
 
 
@@ -47,7 +45,7 @@ class SignalHandler:
         signal(SIGTERM, self._signal_handler)
 
     def _signal_handler(self, signal, frame):
-        LOGGER.info(
+        logging.info(
             f"handling signal {signal}, exiting gracefully. Please Wait until all pending messages are processed"
         )
         self.received_signal = True
@@ -80,9 +78,9 @@ def sqs_check_new_log_messages():
                     external_id = message["MessageAttributes"]["ExternalID"]["StringValue"]
                     feedback = message["MessageAttributes"]["Feedback"]["StringValue"]
                     handle(external_id, feedback)
-                    LOGGER.info(f"Processed {feedback} for {external_id}")
+                    logging.info(f"Processed {feedback} for {external_id}")
                 except Exception as e:
-                    LOGGER.error(
+                    logging.error(
                         f"Exception when handling message with external_id {external_id} for event {feedback}"
                     )
                     run = True
@@ -94,7 +92,7 @@ def sqs_check_new_log_messages():
 
 
 signal_handler = SignalHandler()
-LOGGER.info("Starting to Listen for new log file SQS Events")
+logging.info("Starting to Listen for new log file SQS Events")
 while not signal_handler.received_signal:
     sqs_check_new_log_messages()
-LOGGER.info("Stopped Listening for new log file SQS Events")
+logging.info("Stopped Listening for new log file SQS Events")
