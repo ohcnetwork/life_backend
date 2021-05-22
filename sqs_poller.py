@@ -31,7 +31,7 @@ def handle(external_id, status):
     try:
         if status not in CHOICES:
             return
-        feedback = {status: F(status) + 1}
+        feedback = {CHOICES[status]: F(CHOICES[status]) + 1}
         LifeData.objects.filter(external_id=external_id).update(**feedback)
     except Exception as e:
         return
