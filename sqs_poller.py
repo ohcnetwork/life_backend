@@ -82,6 +82,7 @@ def sqs_check_new_log_messages():
                         external_id = message["MessageAttributes"]["ExternalID"]["StringValue"]
                         feedback = message["MessageAttributes"]["Feedback"]["StringValue"]
                         handle(external_id, feedback)
+                        LOGGER.info(f"Processed {feedback} for {external_id}")
                     except Exception as e:
                         LOGGER.error(
                             f"Exception when handling message with external_id {external_id} for event {feedback}"
