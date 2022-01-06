@@ -53,7 +53,7 @@ newrelic
 
 # Asyncronous Part
 # ------------------------------------------------------------------------------
-celery==4.4.2
+celery==5.2.2
 django-celery-beat==2.0.0
 
 # PDF Printing Tools
